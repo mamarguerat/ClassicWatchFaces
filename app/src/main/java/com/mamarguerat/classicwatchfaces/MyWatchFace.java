@@ -87,7 +87,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         private static final float CENTER_GAP_AND_CIRCLE_RADIUS = 4f;
 
-        private static final int SHADOW_RADIUS = 6;
+        private static final int SHADOW_RADIUS = 3;
         /* Handler to update the time once a second in interactive mode. */
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
         private Calendar mCalendar;
@@ -126,7 +126,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             super.onCreate(holder);
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(MyWatchFace.this)
-                    .setAcceptsTapEvents(true)
+                    .setAcceptsTapEvents(false)
                     .build());
 
             mCalendar = Calendar.getInstance();
@@ -147,7 +147,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             /* Set defaults for colors */
             mWatchHandColor = Color.WHITE;
             mWatchHandHighlightColor = Color.WHITE;
-            mWatchHandShadowColor = Color.argb(0xff, 0x99, 0x99, 0x99);
+            mWatchHandShadowColor = Color.argb(0xff, 0x80, 0x80, 0x80);
 
             mHourPaint = new Paint();
             mHourPaint.setColor(mWatchHandColor);
@@ -178,8 +178,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
             datePaint.setColor(Color.BLACK);
             datePaint.setAntiAlias(true);
             datePaint.setTextAlign(Paint.Align.CENTER);
-            datePaint.setTypeface(Typeface.DEFAULT_BOLD);
-            datePaint.setTextSize(45);
+            datePaint.setTypeface(Typeface.SANS_SERIF);
+            datePaint.setTextSize(35);
         }
 
         @Override
@@ -318,8 +318,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
              * selecting their own photos for the watch face), it will be more
              * efficient to create a black/white version (png, etc.) and load that when you need it.
              */
-            if (!mBurnInProtection && !mLowBitAmbient) {
-                scale = ((float) width) / (float) mGrayBackgroundBitmap.getWidth();
+            //f (!mBurnInProtection && !mLowBitAmbient) {
+                //scale = ((float) width) / (float) mGrayBackgroundBitmap.getWidth();
 
                 mGrayBackgroundBitmap = Bitmap.createScaledBitmap(mGrayBackgroundBitmap,
                         (int) (mGrayBackgroundBitmap.getWidth() * scale),
@@ -331,7 +331,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
                 grayPaint.setColorFilter(filter);
                 canvas.drawBitmap(mGrayBackgroundBitmap, 0, 0, grayPaint);
-            }
+            //}
         }
 
 
@@ -385,7 +385,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
              * cases where you want to allow users to select their own photos, this dynamically
              * creates them on top of the photo.
              */
-            float innerTickRadius = mCenterX - 10;
+            /*float innerTickRadius = mCenterX - 10;
             float outerTickRadius = mCenterX;
             for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
                 float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
@@ -395,7 +395,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
                 canvas.drawLine(mCenterX + innerX, mCenterY + innerY,
                         mCenterX + outerX, mCenterY + outerY, mTickAndCirclePaint);
-            }
+            }*/
 
 
             final int today = mCalendar.get((Calendar.DAY_OF_MONTH));
@@ -409,7 +409,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     (mCalendar.get(Calendar.SECOND) + mCalendar.get(Calendar.MILLISECOND) / 1000f);
             final float secondsRotation = seconds * 6f;
 
-            final float minutesRotation = mCalendar.get(Calendar.MINUTE) * 6f;
+            final float minutesRotation = mCalendar.get(Calendar.MINUTE) * 6f + seconds / 10f;
 
             final float hourHandOffset = mCalendar.get(Calendar.MINUTE) / 2f;
             final float hoursRotation = (mCalendar.get(Calendar.HOUR) * 30) + hourHandOffset;
@@ -419,7 +419,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
              */
             canvas.save();
 
-            canvas.drawText(String.valueOf(today), mCenterX*2*0.829f, mCenterY+17, datePaint);
+            canvas.drawText(String.valueOf(today), mCenterX*2*0.829f, mCenterY+12, datePaint);
 
             canvas.rotate(hoursRotation, mCenterX, mCenterY);
             drawHand(canvas, sHourHandLength, mHourPaint);
@@ -447,11 +447,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private void drawHand(Canvas canvas, float handLength, Paint handPaint)
         {
             Path path = new Path();
-            path.moveTo(mCenterX - 500/handLength, mCenterY - handLength);
-            path.lineTo(mCenterX + 500/handLength, mCenterY - handLength);
-            path.lineTo(mCenterX + 1000/handLength, mCenterY);
-            path.lineTo(mCenterX - 1000/handLength, mCenterY);
-            path.lineTo(mCenterX - 500/handLength, mCenterY - handLength);
+            path.moveTo(mCenterX - 150000f/(handLength*handLength), mCenterY - handLength);
+            path.lineTo(mCenterX + 150000f/(handLength*handLength), mCenterY - handLength);
+            path.lineTo(mCenterX + 300000f/(handLength*handLength), mCenterY);
+            path.lineTo(mCenterX - 300000f/(handLength*handLength), mCenterY);
+            path.lineTo(mCenterX - 150000f/(handLength*handLength), mCenterY - handLength);
             path.close();
             canvas.drawPath(path, handPaint);
         }
