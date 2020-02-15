@@ -318,7 +318,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
              * selecting their own photos for the watch face), it will be more
              * efficient to create a black/white version (png, etc.) and load that when you need it.
              */
-            //f (!mBurnInProtection && !mLowBitAmbient) {
+            //if (!mBurnInProtection && !mLowBitAmbient) {
                 //scale = ((float) width) / (float) mGrayBackgroundBitmap.getWidth();
 
                 mGrayBackgroundBitmap = Bitmap.createScaledBitmap(mGrayBackgroundBitmap,
@@ -369,9 +369,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         private void drawBackground(Canvas canvas) {
 
-            if (mAmbient && (mLowBitAmbient || mBurnInProtection)) {
+            /*if (mAmbient && (mLowBitAmbient || mBurnInProtection)) {
                 canvas.drawColor(Color.BLACK);
-            } else if (mAmbient) {
+            } else*/ if (mAmbient) {
                 canvas.drawBitmap(mGrayBackgroundBitmap, 0, 0, mBackgroundPaint);
             } else {
                 canvas.drawBitmap(mBackgroundBitmap, 0, 0, mBackgroundPaint);
@@ -447,11 +447,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private void drawHand(Canvas canvas, float handLength, Paint handPaint)
         {
             Path path = new Path();
-            path.moveTo(mCenterX - 150000f/(handLength*handLength), mCenterY - handLength);
-            path.lineTo(mCenterX + 150000f/(handLength*handLength), mCenterY - handLength);
-            path.lineTo(mCenterX + 300000f/(handLength*handLength), mCenterY);
-            path.lineTo(mCenterX - 300000f/(handLength*handLength), mCenterY);
-            path.lineTo(mCenterX - 150000f/(handLength*handLength), mCenterY - handLength);
+            path.moveTo(mCenterX - 800f/handLength, mCenterY - handLength);
+            path.lineTo(mCenterX + 800f/handLength, mCenterY - handLength);
+            path.lineTo(mCenterX + 1500f/handLength, mCenterY);
+            path.lineTo(mCenterX - 1500f/handLength, mCenterY);
+            path.lineTo(mCenterX - 800f/handLength, mCenterY - handLength);
             path.close();
             canvas.drawPath(path, handPaint);
         }
