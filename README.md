@@ -2,7 +2,7 @@
  Watch face for Wear OS inspired by real watches
 
 ## I'm searching for testers
- If you want to be a beta tester for my apps, please send me an email at [martin@marguerat.ch](mailto:martin@marguerat.ch)
+ If you want to be a beta tester for my apps, please send me an email at [martin+github@marguerat.ch](mailto:martin+github@marguerat.ch)
 
 ## Want to customize your watch face?
  Feel free to fork my repository and customize your watch face
