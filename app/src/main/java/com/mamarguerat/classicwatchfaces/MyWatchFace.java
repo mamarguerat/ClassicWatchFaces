@@ -179,7 +179,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             datePaint.setAntiAlias(true);
             datePaint.setTextAlign(Paint.Align.CENTER);
             datePaint.setTypeface(Typeface.SANS_SERIF);
-            datePaint.setTextSize(35);
+            datePaint.setTextSize(25);
         }
 
         @Override
@@ -419,7 +419,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
              */
             canvas.save();
 
-            canvas.drawText(String.valueOf(today), mCenterX*2*0.829f, mCenterY+12, datePaint);
+            canvas.drawText(String.valueOf(today), mCenterX*2*0.829f, mCenterY+8, datePaint);
 
             canvas.rotate(hoursRotation, mCenterX, mCenterY);
             drawHand(canvas, sHourHandLength, mHourPaint);
