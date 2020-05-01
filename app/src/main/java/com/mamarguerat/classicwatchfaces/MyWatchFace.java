@@ -81,9 +81,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
-        private static final float HOUR_STROKE_WIDTH = 5f;
-        private static final float MINUTE_STROKE_WIDTH = 3f;
-        private static final float SECOND_TICK_STROKE_WIDTH = 2f;
+        private static final float HOUR_STROKE_WIDTH = 2f;
+        private static final float MINUTE_STROKE_WIDTH = 2f;
+        private static final float SECOND_TICK_STROKE_WIDTH = 1f;
 
         private static final float CENTER_GAP_AND_CIRCLE_RADIUS = 4f;
 
@@ -170,9 +170,10 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mSecondPaint.setShadowLayer(SHADOW_RADIUS, 0, 0, mWatchHandShadowColor);
 
             mTickAndCirclePaint = new Paint();
-            mTickAndCirclePaint.setColor(mWatchHandShadowColor);
-            mTickAndCirclePaint.setStrokeWidth(SECOND_TICK_STROKE_WIDTH);
+            mTickAndCirclePaint.setColor(mWatchHandColor);
+            mTickAndCirclePaint.setStrokeWidth(MINUTE_STROKE_WIDTH);
             mTickAndCirclePaint.setAntiAlias(true);
+            mTickAndCirclePaint.setStrokeCap(Paint.Cap.ROUND);
 
             datePaint = new TextPaint();
             datePaint.setColor(Color.BLACK);
@@ -229,6 +230,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 mSecondPaint.clearShadowLayer();
                 mTickAndCirclePaint.clearShadowLayer();
 
+                mHourPaint.setStyle(Paint.Style.STROKE);
+                mMinutePaint.setStyle(Paint.Style.STROKE);
+                mTickAndCirclePaint.setStyle(Paint.Style.FILL);
+
+                mHourPaint.setStrokeWidth(1f);
+                mMinutePaint.setStrokeWidth(1f);
+                mTickAndCirclePaint.setStrokeWidth(1f);
+
                 datePaint.setColor(Color.WHITE);
                 datePaint.setAntiAlias(false);
 
@@ -261,6 +270,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 mTickAndCirclePaint.setColor(mWatchHandShadowColor);
                 mTickAndCirclePaint.setStrokeWidth(SECOND_TICK_STROKE_WIDTH);
                 mTickAndCirclePaint.setAntiAlias(true);
+
+                mHourPaint.setStyle(Paint.Style.FILL);
+                mMinutePaint.setStyle(Paint.Style.FILL);
 
                 datePaint.setColor(Color.BLACK);
                 datePaint.setAntiAlias(true);
@@ -419,26 +431,46 @@ public class MyWatchFace extends CanvasWatchFaceService {
              */
             canvas.save();
 
+            //Show date
             canvas.drawText(String.valueOf(today), mCenterX*2*0.829f, mCenterY+8, datePaint);
 
+            //Show hour Hand
             canvas.rotate(hoursRotation, mCenterX, mCenterY);
             drawHand(canvas, sHourHandLength, mHourPaint);
+            if(mAmbient)
+            {
+                drawHand(canvas, sHourHandLength, mTickAndCirclePaint);
+            }
+            else
+                canvas.drawCircle(mCenterX, mCenterY, mCenterX/15, mHourPaint);
+            //Show minute Hand
             canvas.rotate(minutesRotation - hoursRotation, mCenterX, mCenterY);
-            canvas.drawCircle(mCenterX, mCenterY, mCenterX/15, mHourPaint);
             drawHand(canvas, sMinuteHandLength, mMinutePaint);
+            if(mAmbient)
+            {
+                drawHand(canvas, sMinuteHandLength, mTickAndCirclePaint);
+            }
+            else
+                canvas.drawCircle(mCenterX, mCenterY, mCenterX/20, mMinutePaint);
 
             /*
              * Ensure the "seconds" hand is drawn only when we are in interactive mode.
              * Otherwise, we only update the watch face once a minute.
              */
             if (!mAmbient) {
+                //Show seconds Hand
                 canvas.rotate(secondsRotation - minutesRotation, mCenterX, mCenterY);
-                canvas.drawCircle(mCenterX, mCenterY, mCenterX/20, mMinutePaint);
                 canvas.drawLine(mCenterX, mCenterY + mSecondHandLength/3.5f, mCenterX, mCenterY - mSecondHandLength, mSecondPaint);
                 canvas.drawCircle(mCenterX, mCenterY, mCenterX/25, mSecondPaint);
 
+                //Small fixation round
+                canvas.drawCircle(mCenterX, mCenterY, mCenterX/80, mTickAndCirclePaint);
             }
-            canvas.drawCircle(mCenterX, mCenterY, mCenterX/80, mTickAndCirclePaint);
+            else
+            {
+                canvas.drawCircle(mCenterX, mCenterY, mCenterX/15, mTickAndCirclePaint);
+                canvas.drawCircle(mCenterX, mCenterY, mCenterX/15, mHourPaint);
+            }
 
             /* Restore the canvas' original orientation. */
             canvas.restore();
