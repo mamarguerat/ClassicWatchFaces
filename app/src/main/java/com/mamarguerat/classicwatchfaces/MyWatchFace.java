@@ -436,22 +436,18 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             //Show hour Hand
             canvas.rotate(hoursRotation, mCenterX, mCenterY);
-            drawHand(canvas, sHourHandLength, mHourPaint);
             if(mAmbient)
-            {
                 drawHand(canvas, sHourHandLength, mTickAndCirclePaint);
-            }
             else
                 canvas.drawCircle(mCenterX, mCenterY, mCenterX/15, mHourPaint);
+            drawHand(canvas, sHourHandLength, mHourPaint);
             //Show minute Hand
             canvas.rotate(minutesRotation - hoursRotation, mCenterX, mCenterY);
-            drawHand(canvas, sMinuteHandLength, mMinutePaint);
             if(mAmbient)
-            {
                 drawHand(canvas, sMinuteHandLength, mTickAndCirclePaint);
-            }
             else
                 canvas.drawCircle(mCenterX, mCenterY, mCenterX/20, mMinutePaint);
+            drawHand(canvas, sMinuteHandLength, mMinutePaint);
 
             /*
              * Ensure the "seconds" hand is drawn only when we are in interactive mode.
